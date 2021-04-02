@@ -1,0 +1,28 @@
+version: "3.9"
+services:
+  app:
+    build: ./
+    ports:
+      - "8080:80"
+    environment:
+      APACHE_SERVER_NAME: magento2.docker
+    depends_on:
+      - es
+      - db
+    links:
+      - 'es:es'
+      - 'db:db'
+  es:
+    image: elasticsearch:7.11.2
+    ports:
+      - "9200:9200"
+    environment:
+      - "discovery.type=single-node"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+  db:
+    image: mariadb:10.4
+    environment:
+      MYSQL_ROOT_PASSWORD: magento
+      MYSQL_DATABASE: magento
+      MYSQL_USER: magento
+      MYSQL_PASSWORD: magento
